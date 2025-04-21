@@ -4,7 +4,7 @@ option csharp_namespace = "UgadaikaServer";
 
 package Server;
 
-//Прото сервера
+//Прото сервера(чтоб не передавали лишние данные)
 service UgadaikaServer{
 	//Запрос на аутентификацию
 	rpc Auth (AuthRequest) returns (BoolResult);

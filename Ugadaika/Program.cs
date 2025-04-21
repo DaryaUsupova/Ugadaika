@@ -7,16 +7,16 @@ namespace UgadaikaServer
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);// Создание билдера веб-приложения
+            var builder = WebApplication.CreateBuilder(args);// Создание веб-приложения
 
             var config = ServiceConfig.GetServiceConfig(false);// Загрузка конфигурации сервиса
 
             builder.WebHost.ConfigureKestrel(opt =>
             {
                 opt.ListenAnyIP(config.Port, //сервер слушает все IP-адреса
-                    options => //дополнительная настройка: указываешь, какой сетевой протокол использовать.
+                    options => 
                     {
-                        options.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;// Включаем поддержку HTTP/2 для gRPC
+                        options.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;// Включаем поддержку HTTP/2 протокол для gRPC
                     });
             });
 

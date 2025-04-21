@@ -28,11 +28,11 @@ namespace UgadaikaServer.MasterData
             {
                 if (value == PlayerState.Disconnected)
                 {
-                    if (_state != PlayerState.Disconnected)
+                    if (_state != PlayerState.Disconnected) //проверка предыдущего состояния игрока
                     {
                         _state = value;
-                        var timeSpan = TimeSpan.FromSeconds(WaitDisconnected);
-                        DisconnectTimer = new Timer((state) => OnExpired.Invoke(), null, timeSpan, timeSpan);
+                        var timeSpan = TimeSpan.FromSeconds(WaitDisconnected); 
+                        DisconnectTimer = new Timer((state) => OnExpired.Invoke(), null, timeSpan, timeSpan);//создаем таймер на полное отклбчение от сервера
                         Game?.SendDisconnect();
                     }
                 }
@@ -42,7 +42,7 @@ namespace UgadaikaServer.MasterData
                     DisconnectTimer?.Dispose();
                     DisconnectTimer = null;
                 }
-                if (value != PlayerState.InGame)
+                if (value != PlayerState.InGame) //проверка статуса игроков
                 {
                     Game?.CheckPlayersStatuses();
                 }

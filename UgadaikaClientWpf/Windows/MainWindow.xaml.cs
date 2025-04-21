@@ -94,7 +94,7 @@ namespace UgadaikaClientWpf
         /// Переключится на другое дочернее окно
         /// </summary>
         private void NavigateTo(UserControl newWindow)
-        {
+        { 
             ChildWindow.Content = newWindow;
         }
 

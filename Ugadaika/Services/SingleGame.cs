@@ -122,6 +122,7 @@ namespace UgadaikaServer.Services
                 switch (player.Value.State)
                 {
                     case PlayerState.New:
+                    case PlayerState.Disconnected:
                         allReadyToStartGame = false;
                         break;
                 }
@@ -170,7 +171,7 @@ namespace UgadaikaServer.Services
         /// </summary>
         private void ConfigureTurnsAndStart()
         {
-            //Формируем очередность ходов
+            //Формируем очередность ходов(у кого больше тот и ходит)
             _namesOrdered = [.. _players.Select(p =>
             {
                 var randomNumb = _random.Next(1, 100);
@@ -184,9 +185,9 @@ namespace UgadaikaServer.Services
                     //Ждем что все подключены
                     while (SomeoneDisconnected)
                     {
-                        Task.Delay(1000);
+                        Task.Delay(1000);//1 раз в сек.
                     }
-                    //Если кого-то окончательно выкидываем с лобби, чтобы не попасть на IndexOutOfRange
+                    //Если кого-то окончательно выкидываем с лобби, (проверка на кол-во игроков, чтоб не было ошибки).
                     if (_namesOrdered.Count == i)
                     {
                         break;
@@ -196,34 +197,34 @@ namespace UgadaikaServer.Services
                     {
                         //Ход игрока
                         var client = new UgadaikaClient.UgadaikaClient.UgadaikaClientClient(player.Channel);
-                        var turnResult = client.Turn(new UgadaikaClient.EmptyMessage()).Value.ToLower();
-                        if (turnResult.Length != 1)
+                        var turnResult = client.Turn(new UgadaikaClient.EmptyMessage()).Value.ToLower(); //запрос на клиента о ходе
+                        if (turnResult.Length != 1) //попытка угдать слово
                         {
-                            if (turnResult.Equals(_word, StringComparison.CurrentCultureIgnoreCase))
+                            if (turnResult.Equals(_word, StringComparison.CurrentCultureIgnoreCase))//сравнение слова с вариантом игрока бе- учета регистра
                             {
-                                List<char> notResolvedChars = [];
-                                for (int j = 0; j < _starredWord.Length; j++)
+                                List<char> notResolvedChars = []; // запись неотгад.симв.
+                                for (int j = 0; j < _starredWord.Length; j++) //заполняет звездочки
                                 {
-                                    if (_starredWord[j] == '*')
+                                    if (_starredWord[j] == '*') 
                                     {
                                         notResolvedChars.Add(_word[j]);
                                     }
                                 }
-                                player.Points += notResolvedChars.Distinct().Count();
-                                EndGame();
+                                player.Points += notResolvedChars.Distinct().Count(); //добавляем очки по кол-ву уникальных неотгаданых символов
+                                EndGame(); //запрос на клиента
                                 gameRunning = false;
                                 break;
                             }
                             else
                             {
-                                SendUpdatedGameState(i == _namesOrdered.Count - 1 ? _namesOrdered[0] : _namesOrdered[i + 1]);
+                                SendUpdatedGameState(i == _namesOrdered.Count - 1 ? _namesOrdered[0] : _namesOrdered[i + 1]); //если попущенец, то отпраляем всем что он лох
                             }
                         }
                         else
                         {
-                            if (_word.Contains(turnResult, StringComparison.CurrentCultureIgnoreCase))
+                            if (_word.Contains(turnResult, StringComparison.CurrentCultureIgnoreCase)) //если 1 буква то сравнение, есть ли буква в слове
                             {
-                                var sendedChar = turnResult[0];
+                                var sendedChar = turnResult[0]; //отгдал букву
                                 for (int j = 0; j < _starredWord.Length; j++)
                                 {
                                     if (_word[j] == sendedChar)
@@ -231,27 +232,29 @@ namespace UgadaikaServer.Services
                                         _starredWord = _starredWord[..j] + sendedChar + _starredWord[(j + 1)..];
                                     }
                                 }
-                                _usedChars.Add(sendedChar);
-                                player.Points++;
-                                if (_starredWord.Contains('*'))
+                                _usedChars.Add(sendedChar); //добавляем в массив использ.букв
+                                player.Points++; //+очко игр.
+                                if (_starredWord.Contains('*')) //проверка на звездачки 
                                 {
-                                    SendUpdatedGameState(i == _namesOrdered.Count - 1 ? _namesOrdered[0] : _namesOrdered[i + 1]);
+                                    SendUpdatedGameState(i == _namesOrdered.Count - 1 ? _namesOrdered[0] : _namesOrdered[i + 1]); //отправка статистики (если есть зв.)
                                 }
                                 else
                                 {
                                     EndGame();
+                                    gameRunning = false;
+                                    break;
                                 }
                             }
                             else
                             {
-                                _usedChars.Add(turnResult[0]);
+                                _usedChars.Add(turnResult[0]); //если попущенец, то пишет букву в использ.симв и отправка инфы игр.
                                 SendUpdatedGameState(i == _namesOrdered.Count - 1 ? _namesOrdered[0] : _namesOrdered[i + 1]);
                             }
                         }
                     }
                     catch
                     {
-                        //Если не ответил то отключился
+                        //Если не ответил то отключился (умолчание)
                         player.State = PlayerState.Disconnected;
                         i--;
                         //Ждем что все подключены
@@ -270,28 +273,29 @@ namespace UgadaikaServer.Services
         /// <param name="nextPlayer"></param>
         private void SendUpdatedGameState(string nextPlayer)
         {
-            var playersStates = _players.Select(p => new PlayersWithPoints()
+            var playersStates = _players.Select(p => new PlayersWithPoints() //берем инф. о игроках и очках и в массив
             {
                 Name = p.Key,
-                Points = p.Value.Points
+                Points = p.Value.Points 
             }).ToArray();
-            foreach (var player in _players.Select(p => p.Value))
+            foreach (var player in _players.Select(p => p.Value)) //обход по игр.
             {
                 try
                 {
                     var client = new UgadaikaClient.UgadaikaClient.UgadaikaClientClient(player.Channel);
-                    var request = new GameStateMessage()
+                    var request = new GameStateMessage() //инф. о состоянии игры 
                     {
-                        CurrentWord = _starredWord,
-                        NextTurnPlayer = nextPlayer,
-                        UsedChars = String.Concat(_usedChars)
+                        //отправка клиенту
+                        CurrentWord = _starredWord, //зашифр.слово 
+                        NextTurnPlayer = nextPlayer, //кто след.ходит
+                        UsedChars = String.Concat(_usedChars) //импольз. символы
                     };
-                    request.Players.AddRange(playersStates);
-                    client.UpdateGameState(request);
+                    request.Players.AddRange(playersStates); //инфа об игроках
+                    client.UpdateGameState(request); //запрос на клиента
                 }
                 catch
                 {
-                    player.State = PlayerState.Disconnected;
+                    player.State = PlayerState.Disconnected; 
                 }
             }
         }
@@ -301,7 +305,7 @@ namespace UgadaikaServer.Services
         /// </summary>
         private void EndGame()
         {
-            var playersStates = _players.Select(p => new PlayersWithPoints()
+            var playersStates = _players.Select(p => new PlayersWithPoints() //игрок + очки
             {
                 Name = p.Key,
                 Points = p.Value.Points
@@ -310,7 +314,7 @@ namespace UgadaikaServer.Services
             {
                 try
                 {
-                    player.Points = 0;
+                    player.Points = 0; //обнуляем для новой игры
                     var client = new UgadaikaClient.UgadaikaClient.UgadaikaClientClient(player.Channel);
                     var request = new GameStateMessage()
                     {

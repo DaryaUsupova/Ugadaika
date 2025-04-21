@@ -35,7 +35,7 @@ namespace UgadaikaServer.Services
         private static string GetRemoteId(string peer, string port)// получить ipv4 из запроса 
         {
             if (string.IsNullOrEmpty(peer)) throw new Exception("Wrong request");
-            //считываение ip клиента
+            //считываение ip клиента (честно помогли ИИ)
             string pattern = @"\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b";
             Match match = Regex.Match(peer, pattern);//ищем совпадения в адресе клиента
             if (match.Success)
