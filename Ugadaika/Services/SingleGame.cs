@@ -316,19 +316,19 @@ namespace UgadaikaServer.Services
                 {
                     player.Points = 0; //обнуляем для новой игры
                     var client = new UgadaikaClient.UgadaikaClient.UgadaikaClientClient(player.Channel);
-                    var request = new GameStateMessage()
+                    var request = new GameStateMessage() //отправка слова 
                     {
                         CurrentWord = _word,
                     };
-                    request.Players.AddRange(playersStates);
-                    client.EndGame(request);
+                    request.Players.AddRange(playersStates); // добавляем к запросу игроков с очками
+                    client.EndGame(request); //запрос на завершение игры
                 }
-                catch (Exception ex)
+                catch (Exception ex) //чтоб всем отправить, а не упасть от одного попущенца
                 {
                     Console.WriteLine(ex);
                 }
             }
-            _onGameEnds.Invoke();
+            _onGameEnds.Invoke(); // удаление из памяти 
         }
 
         /// <summary>
@@ -337,9 +337,9 @@ namespace UgadaikaServer.Services
         /// <param name="playerName"></param>
         internal void RemovePlayer(string playerName)
         {
-            SendReconnect(playerName);
-            _players.TryRemove(playerName, out _);
-            _namesOrdered?.Remove(playerName);
+            SendReconnect(playerName); //отсылает реконект всем клиентам 
+            _players.TryRemove(playerName, out _); //убираем игрока из игры
+            _namesOrdered?.Remove(playerName); //убираем игрока из порядка ходов
         }
 
         /// <summary>
@@ -351,13 +351,13 @@ namespace UgadaikaServer.Services
             try
             {
                 var client = new UgadaikaClient.UgadaikaClient.UgadaikaClientClient(player.Channel);
-                var request = new GameStartMessage()
+                var request = new GameStartMessage() //запрос о состоянии игры
                 {
-                    StarredWord = _starredWord,
-                    WordDescription = _desription
+                    StarredWord = _starredWord, //зашифрованное слово
+                    WordDescription = _desription //описание
                 };
-                request.Players.AddRange(_players.Keys);
-                client.StartGame(request);
+                request.Players.AddRange(_players.Keys); //имена игроков
+                client.StartGame(request); //отправка запроса
             }
             catch
             {

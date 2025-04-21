@@ -9,7 +9,7 @@ namespace UgadaikaServer.Services
     /// <param name="gameService"></param>
     public partial class UgadaikaServerGrpc(GameService gameService) : UgadaikaServer.UgadaikaServerBase //наследуемся от авт.сгенер. файла
     {
-        private readonly GameService _gameService = gameService;// хранени яклиентов и игр
+        private readonly GameService _gameService = gameService;// хранения клиентов и игр
 
         public override Task<BoolResult> Auth(AuthRequest request, ServerCallContext context)//запрос на аунтиф.
         {
@@ -34,7 +34,6 @@ namespace UgadaikaServer.Services
 
         private static string GetRemoteId(string peer, string port)// получить ipv4 из запроса 
         {
-            if (string.IsNullOrEmpty(peer)) throw new Exception("Wrong request");
             //считываение ip клиента (честно помогли ИИ)
             string pattern = @"\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b";
             Match match = Regex.Match(peer, pattern);//ищем совпадения в адресе клиента
