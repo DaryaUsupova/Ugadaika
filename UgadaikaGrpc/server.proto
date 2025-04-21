@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+option csharp_namespace = "UgadaikaServer";
+
+package Server;
+
+//Прото сервера
+service UgadaikaServer{
+	//Запрос на аутентификацию
+	rpc Auth (AuthRequest) returns (BoolResult);
+	//Запрос на переподключение
+	rpc Reconnect (AuthRequest) returns (PlayerStateResult);
+	//Запрос, который говорит о том, что игрок готов начать игру
+	rpc ReadySignal (PortRequest) returns (EmptyMessage);
+	//Запрос на подключение к лобби
+	rpc GoIntoLobby (LobbyRequest) returns (BoolResult);
+}
+
+//Сообщение на подключение к лобби
+message LobbyRequest{
+	//Пароль к лобби
+	int32 pass = 1;
+	//Порт клиента
+	string port = 2;
+}
+
+//Пустое сообщение
+message EmptyMessage{
+
+}
+
+//Запрос с портом
+message PortRequest{
+	//Порт клиента
+	string port = 1;
+}
+
+//Запрос на подключение/переподключение
+message AuthRequest{
+	//Имя игрока
+	string playerName = 1;
+	//Порт клиента
+	string port = 2;
+}
+
+//Состояние игрока при переподключении
+message PlayerStateResult{
+	//Переподключение успешно?
+	bool isSuccess = 1;
+	//Состояние игрока
+	State state =2;
+}
+
+//Перечисление состояний игрока
+enum State{
+	//В лобби
+	inLobby = 0;
+	//Игра запущена
+	gameRunning = 1;
+	//На сервере
+	onServer = 2;
+}
+
+//Результат c bool параметром
+message BoolResult{
+	//Успешность запроса
+	bool isSuccess = 1;
+}

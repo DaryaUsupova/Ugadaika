@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="UgadaikaClientWpf.Windows.GameWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UgadaikaClientWpf.Windows"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="2*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <TextBlock HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="0" x:Name="PlayersInfo"/>
+        <StackPanel Margin="5" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Label HorizontalAlignment="Center" Margin="5">Описание загаданного слова:</Label>
+            <TextBlock HorizontalAlignment="Center" Margin="5" x:Name="Desciption"/>
+            <Label HorizontalAlignment="Center" Margin="5">Текущее слово:</Label>
+            <TextBlock HorizontalAlignment="Center" Margin="5" x:Name="StarredWord"/>
+            <Label HorizontalAlignment="Center" Margin="5">Использованные буквы:</Label>
+            <TextBlock HorizontalAlignment="Center" Margin="5" x:Name="UsedCharsUi"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

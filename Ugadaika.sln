@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35931.197
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UgadaikaServer", "Ugadaika\UgadaikaServer.csproj", "{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UgadaikaGrpc", "UgadaikaGrpc\UgadaikaGrpc.csproj", "{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UgadaikaClientWpf", "UgadaikaClientWpf\UgadaikaClientWpf.csproj", "{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		Server+client|Any CPU = Server+client|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}.Server+client|Any CPU.ActiveCfg = Server+client|Any CPU
+		{D626A753-6CE4-4C7D-9A4B-C6ACC9275D15}.Server+client|Any CPU.Build.0 = Server+client|Any CPU
+		{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}.Server+client|Any CPU.ActiveCfg = Release|Any CPU
+		{C940ABA2-5947-4D1A-B5D5-D96D07F6DE1E}.Server+client|Any CPU.Build.0 = Release|Any CPU
+		{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}.Server+client|Any CPU.ActiveCfg = Release|Any CPU
+		{D93A2BA9-88C0-4663-8F2C-0152BA8A3585}.Server+client|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B5CBA40B-EE47-4DB9-A097-AD64557F0957}
+	EndGlobalSection
+EndGlobal

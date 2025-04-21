@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+option csharp_namespace = "UgadaikaClient";
+
+package Client;
+
+//Прото клиента
+service UgadaikaClient{
+	//Пинг, пустой запрос и результат, так как нам просто надо проверить что запрос дошел
+	rpc Ping (EmptyMessage) returns (EmptyMessage);
+	//Запрос на обновление состояния игры
+	rpc UpdateGameState(GameStateMessage) returns (EmptyMessage);
+	//Сообщение о начале игры
+	rpc StartGame(GameStartMessage) returns (EmptyMessage);
+	//Запрос об окончании игры
+	rpc EndGame(GameStateMessage) returns (EmptyMessage);
+	//Запрос об отключении игрока
+	rpc PlayerDisconnect (StringMessage) returns(EmptyMessage);
+	//Запрос о переподключении игрока
+	rpc PlayerReconnect (StringMessage) returns (EmptyMessage);
+	//Ход
+	rpc Turn (EmptyMessage) returns (StringMessage);
+}
+
+//строковое сообщение
+message StringMessage{
+	//Значение
+	string value = 1;
+}
+
+//Сообщение о начале игры
+message GameStartMessage
+{
+	//Игроки
+	repeated string players = 1;
+	//зашифрованное слово
+	string starredWord = 2;
+	//Описание зашифрованного слова
+	string wordDescription = 3;
+}
+
+//Состояние игры
+message GameStateMessage{
+	//Игроки с очками
+	repeated PlayersWithPoints players = 1;
+	//Кто будет ходить следующим
+	string nextTurnPlayer = 2;
+	//Текущее зашифрованное слово
+	string currentWord = 3;
+	//Использованные буквы
+	string usedChars = 4;
+}
+
+//Игрок и его количество очков
+message PlayersWithPoints{
+	//Имя игрока
+	string name = 1;
+	//Количество очков
+	int32 points = 2;
+}
+
+//Пустое сообщение
+message EmptyMessage{
+
+}
